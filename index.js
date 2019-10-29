@@ -28,6 +28,7 @@ function checkProjectExists(req, res, next) {
     
 };
 
+
 server.use('/projects', (req, res, next) => {
     count += 1;
     console.log(count);
@@ -54,7 +55,32 @@ server.get('/projects/:index', checkProjectExists, (req, res) => {
 
 server.post('/projects', (req, res) => {
     const { body } = req;
+    
+    function projectExist() {
+        const { id } = req.body;
+        console.log(id);
+    
 
+        let val = projects.findIndex((item) => {
+            console.log(item.id)
+            return item.id == id;  
+        });
+
+        if(val < 0){
+            val = false;
+        }
+        else {
+            val = true;
+        }
+
+        return val;
+
+    }
+
+
+    if(projectExist()){
+        return res.status(400).json({ error: "Não é possível criar dois usuários com mesmo id" })
+    }
     body.tasks = [];
 
     projects.push(body);
